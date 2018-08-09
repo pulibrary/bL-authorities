@@ -13,4 +13,9 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//
+// Required by Blacklight
+//= require jquery
+//= require blacklight/blacklight
+
 //= require_tree .
