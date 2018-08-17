@@ -15,7 +15,8 @@ class CatalogController < ApplicationController
 
     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters
     config.default_solr_params = {
-      rows: 10
+      rows: 10,
+      fl: 'id,name_s,references_name_s'
     }
 
     # solr path which will be added to solr base url before the other solr params.
@@ -85,7 +86,6 @@ class CatalogController < ApplicationController
        :years_25 => { label: 'within 25 Years', fq: "pub_date:[#{Time.zone.now.year - 25 } TO *]" }
     }
 
-
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.
@@ -93,6 +93,7 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
+    config.add_index_field 'references_name_s', label: 'References'
     config.add_index_field 'title_display', label: 'Title'
     config.add_index_field 'title_vern_display', label: 'Title'
     config.add_index_field 'author_display', label: 'Author'
@@ -102,6 +103,7 @@ class CatalogController < ApplicationController
     config.add_index_field 'published_display', label: 'Published'
     config.add_index_field 'published_vern_display', label: 'Published'
     config.add_index_field 'lc_callnum_display', label: 'Call number'
+    config.add_index_field 'name_s', label: 'Name'
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
@@ -119,6 +121,18 @@ class CatalogController < ApplicationController
     config.add_show_field 'published_vern_display', label: 'Published'
     config.add_show_field 'lc_callnum_display', label: 'Call number'
     config.add_show_field 'isbn_t', label: 'ISBN'
+
+    config.add_show_field 'see_also_name_s', label: 'See also'
+    config.add_show_field 'name_s', label: 'Name'
+    config.add_show_field 'birth_date_s', label: 'Date of birth'
+    config.add_show_field 'death_date_s', label: 'Date of death'
+    config.add_show_field 'birth_place_s', label: 'Birth places'
+    config.add_show_field 'death_place_s', label: 'Death places'
+    config.add_show_field 'associated_country_s', label: 'Country'
+    config.add_show_field 'other_associated_place_s', label: 'OtherPlaces'
+    config.add_show_field 'associated_language_s', label: 'Language'
+    config.add_show_field 'fuller_form_s', label: 'Fuller form'
+    config.add_show_field 'references_name_s', label: 'References'
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -139,7 +153,6 @@ class CatalogController < ApplicationController
     # since we aren't specifying it otherwise.
 
     config.add_search_field 'all_fields', label: 'All Fields'
-
 
     # Now we see how to over-ride Solr request handler defaults, in this
     # case for a BL "search field", which is really a dismax aggregate
